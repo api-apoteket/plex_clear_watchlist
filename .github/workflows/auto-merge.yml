@@ -25,7 +25,7 @@ jobs:
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
           steps.metadata.outputs.update-type == 'version-update:semver-minor' ||
           steps.metadata.outputs.update-type == 'version-update:semver-major')
-        run: gh pr merge --admin --delete-branch --squash "$PR_URL"
+        run: gh pr merge --auto --delete-branch --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ github.token }}
@@ -57,6 +57,16 @@ jobs:
     if: startsWith(github.head_ref, 'claude/')
     steps:
       - name: Auto-merge Claude AI PRs once checks pass
+        run: gh pr merge --auto --squash --delete-branch "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ github.token }}
+
+  codex:
+    runs-on: ubuntu-latest
+    if: startsWith(github.head_ref, 'codex/')
+    steps:
+      - name: Auto-merge Codex AI PRs once checks pass
         run: gh pr merge --auto --squash --delete-branch "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
